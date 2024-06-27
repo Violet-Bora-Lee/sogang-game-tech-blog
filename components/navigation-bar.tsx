@@ -23,7 +23,7 @@ export function NavigationBar({ className }: NavigationBarProps) {
         href="/posts"
         className="font-semibold hover:text-accent dark:hover:text-accent-dark"
       >
-        Posts
+        글
       </Link>
       {allPages.map((page) => (
         <Link
