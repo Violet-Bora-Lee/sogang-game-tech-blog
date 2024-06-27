@@ -26,7 +26,7 @@ export function Footer() {
           >
             <Github
               className="icon-base"
-              data-tooltip-content="My GitHub profile"
+              data-tooltip-content="서강대학교 미래교육원 GitHub"
               data-tooltip-id="footer-tooltip"
               aria-label="My GitHub profile"
             />
