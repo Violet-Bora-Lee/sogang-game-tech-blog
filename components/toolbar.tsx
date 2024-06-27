@@ -59,8 +59,8 @@ export function Toolbar({ fontControls, className }: ToolbarProps) {
             'icon-base h-5 w-5 mix-blend-color-dodge xs:h-6 xs:w-6',
             isSearching && 'text-accent/60 dark:text-accent-dark/80',
           )}
-          aria-label="Search Posts"
-          data-tooltip-content="Search Posts"
+          aria-label="글 검색"
+          data-tooltip-content="글 검색"
           data-tooltip-id="toolbar-tooltip"
         />
       </button>
@@ -101,34 +101,21 @@ export function Toolbar({ fontControls, className }: ToolbarProps) {
           </button>
         </>
       )}
-
-      <button onClick={toggleSerif}>
-        <Type
-          id="serif"
-          className={cn(
-            'icon-base ml-auto h-5 w-5 mix-blend-color-dodge xs:h-6 xs:w-6',
-            isSerif && 'text-accent/60 dark:text-accent-dark/80',
-          )}
-          data-tooltip-content="Toggle serif font"
-          data-tooltip-id="toolbar-tooltip"
-          aria-label="Toggle serif font"
-        />
-      </button>
       <button
         onClick={toggleDarkAndApply}
         id="theme-toggle"
-        data-tooltip-content={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+        data-tooltip-content={`${isDark ? '밝은' : '어두운'} 화면으로 전환`}
         data-tooltip-id="toolbar-tooltip"
       >
         {isDark ? (
           <Moon
             className="icon-base h-5 w-5 mix-blend-color-dodge xs:h-6 xs:w-6"
-            aria-label="Switch to light mode"
+            aria-label="밝은 화면으로 전환"
           />
         ) : (
           <Sun
             className="icon-base h-5 w-5 mix-blend-color-dodge xs:h-6 xs:w-6"
-            aria-label="Switch to dark mode"
+            aria-label="어두운 화면으로 전환"
           />
         )}
       </button>
