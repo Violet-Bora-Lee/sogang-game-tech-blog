@@ -1,0 +1,122 @@
+---
+title: "Code Smell In CSharp"
+excerpt: "C#을 이용한 리팩토링기법 활용"
+date: "2024-06-27"
+tags:
+  - CSharp
+  - 리팩토링
+  - 코드스멜
+  - 클린코드
+---
+
+# C#을 이용한 리팩토링기법 활용
+군 복무할 때 읽은 책 중에 마틴 파울러의 리팩토링 2판을 읽은 적이 있다. 이 책을 읽으며 다양한 리팩토링 기법과 함께 어떤 코드가 좋지 않은 코드인지 대략적으로 알게 되었던 것 같다.
+이 글에서는 수업에서도 언급되었던 코드 스멜, 즉 코드에서 나는 악취를 몇가지 예시와 함께 리팩토링 기법을 소개해보려 한다.
+## 코드 스멜
+### 1. 긴 메서드 (Long Method)
+긴 메서드는 리팩토링 2판에서 가장 먼저 다루는 코드 스멜 중 하나이다. 파울러는 짧은 메서드가 더 이해하기 쉽고, 재사용성이 높으며, 오버라이딩하기 쉽다고 설명한다. 긴 메서드는 주석이 많아지는 경향이 있는데, 이는 복잡성의 신호이다.
+``` csharp
+public void DoEverything()
+{
+    // 100줄 이상의 코드...
+    // 여러 가지 작업을 수행하는 매우 긴 메서드
+}
+``` 
+#### 리팩토링 기법: 메서드 추출 (Extract Method)
+메서드 추출은 코드의 일부를 새로운 메서드로 분리하는 기법이다. 파울러는 이 기법을 통해 코드의 목적을 더 명확히 드러낼 수 있다고 말한다. 메서드 이름을 통해 코드의 의도를 표현할 수 있어, 주석이 필요 없어진다.
+``` csharp
+public void DoEverything()
+{
+    DoTaskA();
+    DoTaskB();
+    DoTaskC();
+}
+private void DoTaskA() { /* ... */ }
+private void DoTaskB() { /* ... */ }
+private void DoTaskC() { /* ... */ }
+```
+### 2. 중복 코드 (Duplicate Code)
+중복 코드는 리팩토링 2판에서 강조하는 주요 코드 스멜이다. 파울러는 중복 코드가 변경을 어렵게 만들고, 실수의 위험을 증가시킨다고 설명한다. 동일한 코드 구조가 여러 곳에서 반복되면 버그 수정 시 모든 곳을 찾아 수정해야 하는 문제가 발생한다.
+``` csharp
+public void ProcessUser(User user)
+{
+    if (user.Age > 18)
+    {
+        Console.WriteLine("성인 사용자입니다.");
+        // 사용자 처리 로직...
+    }
+}
+public void ValidateUser(User user)
+{
+    if (user.Age > 18)
+    {
+        Console.WriteLine("성인 사용자입니다.");
+        // 유사한 사용자 처리 로직...
+    }
+}
+```
+#### 리팩토링 기법: 메서드 추출 및 재사용
+파울러는 중복 코드를 제거하기 위해 공통 동작을 별도의 메서드로 추출하는 것을 권장한다. 이는 "Don't Repeat Yourself (DRY)" 원칙을 따르는 것이다.
+``` csharp
+public void ProcessUser(User user)
+{
+    if (IsAdult(user))
+    {
+        // 사용자 처리 로직...
+    }
+}
+public void ValidateUser(User user)
+{
+    if (IsAdult(user))
+    {
+        // 유사한 사용자 처리 로직...
+    }
+}
+private bool IsAdult(User user)
+{
+    if (user.Age > 18)
+    {
+        Console.WriteLine("성인 사용자입니다.");
+        return true;
+    }
+    return false;
+}
+```
+### 3. 과도한 매개변수 (Long Parameter List)
+수업시간에도 언급되었던 내용이다. 실습으로 많은 수의 매개변수를 가진 메서드를 리팩토링 해보았던 것으로 기억한다.
+리팩토링 2판에서 파울러는 긴 매개변수 목록이 이해하기 어렵고 일관성을 유지하기 힘들다고 설명한다. 또한 매개변수가 많을수록 메서드가 너무 많은 일을 하고 있을 가능성이 높다고 지적한다.
+```csharp
+public void CreateUser(string name, string email, int age, string address, 
+    string phone, string occupation, string password, bool isActive)
+{
+    // 사용자 생성 로직...
+}
+```
+#### 리팩토링 기법: 매개변수 객체 도입 (Introduce Parameter Object)
+파울러는 여러 개의 매개변수를 하나의 객체로 그룹화하는 것을 제안한다. 이는 데이터 응집도를 높이고, 매개변수 간의 관계를 명확히 하며, 메서드 시그니처를 간소화한다.
+```csharp
+public class UserCreateRequest
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public int Age { get; set; }
+    public string Address { get; set; }
+    public string Phone { get; set; }
+    public string Occupation { get; set; }
+    public string Password { get; set; }
+    public bool IsActive { get; set; }
+}
+public void CreateUser(UserCreateRequest request)
+{
+    // 사용자 생성 로직...
+}
+```
+----
+마틴 파울러의 책에는 이보다 훨씬 더 많은, 약 20개 정도의 코드 스멜이 소개되어 있다. 주석, 클래스 크기, 인터페이스 활용 등 다양한 측면에서 코드 품질을 평가하고 개선하는 방법을 다루고 있다.
+
+하지만 이런 작은 부분들을 개선하는 것만으로도 전체 코드베이스의 품질을 크게 향상시킬 수 있다. 리팩토링은 단순히 코드를 '예쁘게' 만드는 것이 
+아니라 코드의 구조를 개선하고, 가독성을 높이며, 유지보수를 쉽게 만드는 과정이다. 결과적으로 버그 발생 가능성을 줄이고 새로운 기능 추가를 더 쉽게 만들어준다.
+
+마틴 파울러가 강조했듯이, 리팩토링은 지속적으로 해야 하는 작업이다. 완벽한 코드는 없지만, 계속해서 개선할 수 있는 코드는 있다. 이 글에서 소개한 몇 가지 기법들을 시작으로, 더 깊이 있는 리팩토링 기술을 익히고 적용해 나간다면, 우리의 코드는 점점 더 나아질 것이다.
+
+>참고: 이 글에서 사용된 코드 예제는 AI Claude를 이용해 생성되었습니다.
