@@ -1,0 +1,317 @@
+# 유니티에서 다양한 이벤트처리를 클린코드로 관리해보자!
+
+<br>
+
+<br>
+
+### 시작에 앞서
+
+게임 개발 여정에 있어서 다양한 이벤트를 효과적으로 관리하는 것은 중요한 과제입니다. 
+유니티와 C#을 활용하여 게임 내 일시정지, 클리어, 게임오버 등의 상황을 어떻게 처리할 수 있는지에 대해 알아보겠습니다.
+
+아래는 이 글에서 다루게 되는 코드의 예제입니다.
+
+<br>
+
+## :page_facing_up: **코드 예제**
+
+<details>
+<summary>코드 접기/펼치기</summary>
+    
+```csharp
+using UnityEngine;
+using System;
+
+public class GameManager : MonoBehaviour
+{
+    public static event Action OnPause;
+    public static event Action OnGameOver;
+    public static event Action OnClear;
+
+    private bool isPaused = false;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            TogglePause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GameOver();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GameClear();
+        }
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        if (isPaused)
+        {
+            OnPause?.Invoke();
+        }
+        else
+        {
+            OnPause?.Invoke();
+        }
+    }
+
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
+    }
+
+    public void GameClear()
+    {
+        OnClear?.Invoke();
+    }
+}
+
+public class UIManager : MonoBehaviour
+{
+    private void OnEnable()
+    {
+        GameManager.OnPause += HandlePause;
+        GameManager.OnGameOver += HandleGameOver;
+        GameManager.OnClear += HandleClear;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnPause -= HandlePause;
+        GameManager.OnGameOver -= HandleGameOver;
+        GameManager.OnClear -= HandleClear;
+    }
+
+    private void HandlePause()
+    {
+        // Pause UI 처리
+        Debug.Log("게임 일시정지");
+    }
+
+    private void HandleGameOver()
+    {
+        // Game Over UI 처리
+        Debug.Log("게임 오버");
+    }
+
+    private void HandleClear()
+    {
+        // Game Clear UI 처리
+        Debug.Log("게임 클리어");
+    }
+}
+
+public class AudioManager : MonoBehaviour
+{
+    private void OnEnable()
+    {
+        GameManager.OnPause += HandlePause;
+        GameManager.OnGameOver += HandleGameOver;
+        GameManager.OnClear += HandleClear;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnPause -= HandlePause;
+        GameManager.OnGameOver -= HandleGameOver;
+        GameManager.OnClear -= HandleClear;
+    }
+
+    private void HandlePause()
+    {
+        // Pause 오디오 처리
+        Debug.Log("오디오 일시정지");
+    }
+
+    private void HandleGameOver()
+    {
+        // Game Over 오디오 처리
+        Debug.Log("오디오 게임 오버");
+    }
+
+    private void HandleClear()
+    {
+        // Game Clear 오디오 처리
+        Debug.Log("오디오 게임 클리어");
+    }
+}
+```
+</details>
+
+<br>
+
+### 1. 단일 책임 원칙 (Single Responsibility Principle, SRP)
+
+단일 책임 원칙은 클래스가 하나의 책임만 가져야 한다는 원칙입니다. 이는 클래스의 변경 이유가 하나만 존재하도록 합니다.
+
+```csharp
+public class GameManager : MonoBehaviour
+{
+    public static event Action OnPause;
+    public static event Action OnGameOver;
+    public static event Action OnClear;
+
+    private bool isPaused = false;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            TogglePause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GameOver();
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            GameClear();
+        }
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+        OnPause?.Invoke();
+    }
+
+    public void GameOver()
+    {
+        OnGameOver?.Invoke();
+    }
+
+    public void GameClear()
+    {
+        OnClear?.Invoke();
+    }
+}
+```
+
+위 코드는 `GameManager` 클래스로, 게임 내 상태를 관리하는 역할을 합니다. 주요 이벤트 (일시정지, 게임 오버, 게임 클리어)를 처리하며, 각각의 상태 변경 시 해당 이벤트를 발생시킵니다. 
+
+`SRP`를 적용하면 각 클래스가 하나의 책임만 가지므로, 특정 기능에 대한 변경 사항이 해당 클래스에만 영향을 미칩니다. 이는 코드의 유지보수를 쉽게 만들고, 버그를 줄이는 데 도움이 됩니다.
+
+
+만약 `GameManager`가 게임 상태 관리 외에도 UI 업데이트나 오디오 관리까지 한다면, 게임 상태를 변경할 때마다 UI나 오디오와 관련된 코드도 수정해야 할 수 있습니다. `SRP`를 적용하면 이러한 수정이 각 책임을 담당하는 클래스에만 국한됩니다.
+
+<br>
+
+### 2. 의존성 주입 (Dependency Injection, DI)
+
+의존성 주입은 객체의 의존성을 외부에서 주입받아 결합도를 낮추는 방법입니다. 유니티에서는 이벤트를 통해 이 원칙을 적용할 수 있습니다.
+
+```csharp
+public class UIManager : MonoBehaviour
+{
+    private void OnEnable()
+    {
+        GameManager.OnPause += HandlePause;
+        GameManager.OnGameOver += HandleGameOver;
+        GameManager.OnClear += HandleClear;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnPause -= HandlePause;
+        GameManager.OnGameOver -= HandleGameOver;
+        GameManager.OnClear -= HandleClear;
+    }
+
+    private void HandlePause()
+    {
+        // Pause UI 처리
+        Debug.Log("게임 일시정지");
+    }
+
+    private void HandleGameOver()
+    {
+        // Game Over UI 처리
+        Debug.Log("게임 오버");
+    }
+
+    private void HandleClear()
+    {
+        // Game Clear UI 처리
+        Debug.Log("게임 클리어");
+    }
+}
+```
+
+`UIManager` 클래스는 `GameManager`의 이벤트를 구독하여 UI를 업데이트합니다. `GameManager`와 `UIManager` 간의 결합도가 낮아집니다.
+
+의존성 주입은 클래스가 직접 다른 클래스의 인스턴스를 생성하지 않고, 외부에서 주입받음으로써 클래스 간의 결합도를 낮춥니다. 이를 통해 코드의 유연성과 재사용성을 높일 수 있습니다.  
+
+어떤 클래스가 어떤 의존성을 필요로 하는지 명확히 드러나기 때문에, 유지보수 시 필요한 변경이 명확해집니다.
+
+<br>
+
+### 3. 코드를 분리할 것 
+
+기능별로 클래스를 분리하여 관리하면 코드의 가독성과 유지보수성이 높아집니다. 위의 예시들에서 각 기능별로 클래스를 분리하였습니다.
+```
+- GameManager 클래스: 게임의 상태를 관리합니다. 게임 일시정지, 게임 오버, 게임 클리어 이벤트를 정의하고 호출합니다.
+ 
+- UIManager 클래스: 게임 상태 변경에 따라 UI를 업데이트합니다. GameManager의 이벤트를 구독하여 UI를 처리합니다.
+
+- AudioManager 클래스: 게임 상태 변경에 따라 오디오를 처리합니다. GameManager의 이벤트를 구독하여 오디오를 제어합니다.
+```
+
+*:bulb: 코드를 분리할때에는 각 클래스의 기능이나 의도에 맞게 해당 추상화 수준을 반영하는 이름을 선택하는 것 역시 중요합니다.*
+
+
+<br>
+
+### 4. 명확한 네이밍을 사용할 것
+
+앞서서 코드 분리할 때의 이름 선택과 마찬가지로, 명확한 변수와 메서드 이름을 사용하는 것은 코드의 가독성과 이해도를 높이는 중요한 요소입니다. 명확한 네이밍의 중요성을 설명하기 위해 나쁜 예시와 좋은 예시를 들어 보겠습니다.
+
+__:worried: 나쁜 예시__
+```csharp
+// 나쁜 예시: 의도를 명확히 전달하지 않는 메서드 이름
+private void Abcd() => Debug.Log("게임 일시정지 처리");
+
+private void OverFunction() => Debug.Log("게임 오버 처리");
+
+private void CMethod() => Debug.Log("게임 클리어 처리");
+```
+
+- 메서드 이름이 각각의 동작을 명확히 설명하지 않습니다. Abcd, OverFunction, CMethod는 각각 어떤 동작을 수행하는지 명확하지 않습니다.
+
+
+- 메서드 이름이 충분히 명확하지 않으면 코드를 이해하기 어렵고, 다른 개발자들이 코드를 유지보수하거나 확장하기 어려울 수 있습니다.
+
+
+\
+__:smile: 좋은 예시__
+
+```csharp
+// 좋은 예시: 각 이벤트에 대해 명확하게 처리하는 메서드 이름
+private void HandlePause() => Debug.Log("게임 일시정지 처리");
+
+private void HandleGameOver() => Debug.Log("게임 오버 처리");
+
+private void HandleClear() => Debug.Log("게임 클리어 처리");
+```
+
+- 메서드 이름이 각 이벤트의 의도를 명확히 설명합니다. 예시로 HandlePause는 게임 일시정지를 처리한다는 의미를 전달합니다.
+
+
+- 각 메서드는 하나의 명확한 작업을 수행하며, 코드를 읽는 사람이 메서드 이름만으로도 그 동작을 쉽게 이해할 수 있습니다.
+
+<br>
+
+### 마무리
+
+이 글에서는 유니티 C#을 사용하여 게임 내 다양한 이벤트를 처리하는 방법을 단계별로 정리해 보았습니다. 코드를 단일 책임 원칙에 따라 분리하고, 의존성 주입을 활용하여 클래스 간의 결합도를 낮추는 방법을 소개했습니다. 또한 코드를 각 기능별로 분리함으로써 가독성과 유지보수성을 높이는 방법을 설명했습니다.
+
+코드 분리와 명확한 네이밍을 통해 코드의 이해도를 높이고, 유지보수를 용이하게 만드는 중요성에 대해 강조했습니다. 이를 통해 개발자들은 더 효율적으로 협업하고, 확장 가능한 애플리케이션을 개발할 수 있을 것입니다.
+
+이 글이 여러분의 게임 개발 과정에서 도움이 되었기를 바랍니다. 감사합니다.
