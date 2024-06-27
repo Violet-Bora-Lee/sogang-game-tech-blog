@@ -1,4 +1,3 @@
-import type { GiscusProps, Theme as GiscusTheme } from '@giscus/react';
 import type { Theme as ShikiTheme } from 'shiki';
 
 /**
@@ -95,26 +94,6 @@ export type BlogConfig = {
        * @default 'github-dark'
        */
       dark: ShikiTheme;
-    };
-  };
-  /**
-   * Giscus comment sections configuration.
-   * @see https://giscus.app
-   */
-  giscus: Omit<GiscusProps, 'theme'> & {
-    /**
-     * The themes to use in the Giscus comment sections.
-     * Must be a valid {@link GiscusTheme}.
-     */
-    theme?: {
-      /**
-       * @default 'light'
-       */
-      light?: GiscusTheme;
-      /**
-       * @default 'dark_dimmed'
-       */
-      dark?: GiscusTheme;
     };
   };
   /**

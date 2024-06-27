@@ -3,7 +3,6 @@ import { type Metadata } from 'next/types';
 import { allPosts } from 'contentlayer/generated';
 
 import { blogConfig } from '@/config';
-import { Comments } from '@/components/comments';
 import { MDXContent } from '@/components/mdx-content';
 import { PostIntro } from '@/components/post-intro';
 
@@ -68,7 +67,6 @@ export default function PostPage({ params }: PostPageProps) {
     <article className="h-full px-8">
       <PostIntro title={post.title} date={post.date} tags={post.tags} />
       <MDXContent code={post.body.code} />
-      <Comments />
     </article>
   );
 }

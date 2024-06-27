@@ -34,17 +34,6 @@ const blogConfig = {
       dark: 'github-dark',
     },
   },
-  giscus: {
-    repo: 'kfirfitousi/blog',
-    repoId: 'R_kgDOIcM7JA',
-    category: 'Comments',
-    categoryId: 'DIC_kwDOIcM7JM4CTdK0',
-    mapping: 'title',
-    theme: {
-      light: 'light',
-      dark: 'dark_dimmed',
-    },
-  },
   footerLinks: {
     github: 'https://github.com/sggameopensource',
   },
