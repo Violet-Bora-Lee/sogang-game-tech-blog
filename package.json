@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "test": "npx vitest",
-    "build": "next build",
+    "build": "next build --no-lint",
+    "clean": "rm -rf .next",
     "postbuild": "next-sitemap",
     "start": "next start",
     "style:lint": "next lint",
