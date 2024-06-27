@@ -7,7 +7,7 @@
 
 /** @type {import('./types').BlogConfig} */
 const blogConfig = {
-  url: 'https://blog.kfirfitousi.com',
+  url: 'https://sogang-game-tech-blog.vercel.app',
   title: '서강대학교 미래교육원',
   titleParts: ['서강대학교', '미래교육원'],
   author: '서강대학교 미래교육원',
