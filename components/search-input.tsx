@@ -50,20 +50,7 @@ export function SearchInput({ hasResults }: SearchInputProps) {
 }
 
 const placeholders = [
-  'What are you looking for?',
-  'Something need doing?',
-  'Looking for something specific?',
-  'Looking for something special?',
-  'Ah, I have just the thing for you.',
-  'What brings you here?',
-  'Whatcha lookin for?',
-  "You need somethin'?",
-  'I got what you need!',
-  'Yeah, what do you want?',
-  'What do you require?',
-  'I have exactly what you need.',
-  'What can I get for ya today?',
-  'May you find what you seek.',
-  "I hope you'll find something useful!",
-  'Feel free to browse.',
+  '배우고 싶은 주제가 있나요?',
+  '게임 개발의 베스트 프랙티스를 알고싶나요?',
+  // TODO: '검색 플레이스 홀더 추가',
 ];
