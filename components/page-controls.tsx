@@ -33,8 +33,8 @@ export function PageControls({
           'dark:text-slate-300 dark:enabled:hover:text-accent-dark dark:disabled:text-slate-500',
         )}
       >
-        <ArrowLeft aria-label="Previous page" />
-        <span>Previous</span>
+        <ArrowLeft aria-label="이전 페이지" />
+        <span>이전</span>
       </button>
       <div className="flex flex-row flex-wrap justify-center space-x-2 px-2 text-2xl">
         {Array.from({ length: currentPage }, (_, i) => (
@@ -80,8 +80,8 @@ export function PageControls({
           'dark:text-slate-300 dark:enabled:hover:text-accent-dark dark:disabled:text-slate-500',
         )}
       >
-        <span className="h-full">Next</span>
-        <ArrowRight aria-label="Next page" />
+        <span className="h-full">다음</span>
+        <ArrowRight aria-label="다음 페이지" />
       </button>
     </div>
   );
