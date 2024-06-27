@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "test": "npx vitest",
-    "build": "next build --no-lint",
+    "build": "next build",
     "clean": "rm -rf .next",
     "postbuild": "next-sitemap",
     "start": "next start",
@@ -26,7 +26,7 @@
     "grapheme-splitter": "^1.0.4",
     "hastscript": "^7.2.0",
     "lucide-react": "^0.176.0",
-    "next": "13.3.1",
+    "next": "13.5.6",
     "next-contentlayer": "^0.3.1",
     "next-sitemap": "^4.0.7",
     "react": "18.2.0",

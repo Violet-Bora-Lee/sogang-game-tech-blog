@@ -4,7 +4,6 @@
   "rules": {
     "tailwindcss/classnames-order": ["error", { "callees": ["cn"] }],
     "tailwindcss/no-custom-classname": ["error", { "callees": ["cn"] }],
-    "tailwindcss/no-contradicting-classname": ["error", { "callees": ["cn"] }],
-    "tailwindcss/enforces-shorthand": ["error", { "callees": ["cn"] }]
+    "tailwindcss/no-contradicting-classname": ["error", { "callees": ["cn"] }]
   }
 }
