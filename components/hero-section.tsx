@@ -62,7 +62,7 @@ export function HeroSection() {
       >
         <h1 className="block w-full text-center text-3xl font-bold text-slate-800 dark:text-rose-50 xs:text-4xl sm:text-5xl">
           <Balancer>
-            Welcome to my blog
+            반갑습니다
             <span className="ml-2 inline-block origin-[70%_70%] animate-wave">
               👋
             </span>
@@ -79,7 +79,7 @@ export function HeroSection() {
               dispatch({ type: 'setDone', payload: 'subtitle' });
             }}
           >
-            I write about{' '}
+            이곳에서 다루는 주제:{' '}
           </Typist>
         )}
         {subtitleDone && (
